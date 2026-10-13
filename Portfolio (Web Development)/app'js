@@ -1,0 +1,167 @@
+// MOBILE NAVIGATION
+
+const menuButton = document.getElementById("menu-button");
+const navMenu = document.getElementById("nav-menu");
+
+menuButton.addEventListener("click", function () {
+
+    const isOpen = navMenu.classList.toggle("show");
+
+    menuButton.setAttribute("aria-expanded", isOpen);
+
+    menuButton.setAttribute(
+        "aria-label",
+        isOpen ? "Close navigation menu" : "Open navigation menu"
+    );
+
+    menuButton.textContent = isOpen ? "✕" : "☰";
+
+});
+
+
+// CLOSE MOBILE MENU WHEN A LINK IS CLICKED
+
+const navLinks = navMenu.querySelectorAll("a");
+
+navLinks.forEach(function (link) {
+
+    link.addEventListener("click", function () {
+
+        navMenu.classList.remove("show");
+
+        menuButton.setAttribute("aria-expanded", "false");
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
+
+        menuButton.textContent = "☰";
+
+    });
+
+});
+
+
+// DARK AND LIGHT MODE
+
+const themeButton = document.getElementById("theme-button");
+
+function applyTheme(theme) {
+
+    const isLight = theme === "light";
+
+    document.body.classList.toggle("light", isLight);
+
+    themeButton.textContent = isLight ? "☾" : "☀";
+
+    themeButton.setAttribute(
+        "aria-label",
+        isLight ? "Switch to dark mode" : "Switch to light mode"
+    );
+
+}
+
+
+// LOAD THE SAVED THEME
+
+let savedTheme = "dark";
+
+try {
+    savedTheme = localStorage.getItem("portfolio-theme") || "dark";
+} catch (error) {
+    savedTheme = "dark";
+}
+
+applyTheme(savedTheme);
+
+
+// CHANGE THEME WHEN BUTTON IS CLICKED
+
+themeButton.addEventListener("click", function () {
+
+    const newTheme = document.body.classList.contains("light")
+        ? "dark"
+        : "light";
+
+    applyTheme(newTheme);
+
+    try {
+        localStorage.setItem("portfolio-theme", newTheme);
+    } catch (error) {
+        // The theme still works if browser storage is unavailable.
+    }
+
+});
+
+
+// CONTACT FORM VALIDATION
+
+const contactForm = document.getElementById("contact-form");
+const response = document.getElementById("response");
+
+contactForm.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+    // CHECK NAME
+
+    if (name.length < 2) {
+
+        response.textContent =
+            "Please enter a name containing at least 2 characters.";
+
+        response.style.color = "#ff9999";
+
+        return;
+    }
+
+
+    // CHECK EMAIL
+
+    if (!emailPattern.test(email)) {
+
+        response.textContent =
+            "Please enter a valid email address.";
+
+        response.style.color = "#ff9999";
+
+        return;
+    }
+
+
+    // CHECK MESSAGE
+
+    if (message.length < 10) {
+
+        response.textContent =
+            "Your message must contain at least 10 characters.";
+
+        response.style.color = "#ff9999";
+
+        return;
+    }
+
+
+    // VALIDATION SUCCESS
+
+    response.textContent =
+        "Your information is valid! This demonstration form does not send emails.";
+
+    response.style.color = "#a8e6a3";
+
+});
+
+
+// AUTOMATIC COPYRIGHT YEAR
+
+const yearElement = document.getElementById("year");
+
+yearElement.textContent = new Date().getFullYear();
